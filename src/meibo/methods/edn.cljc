@@ -96,6 +96,6 @@
 
 #?(:clj
    (defn here
-     "Directory of this actor's methods/ dir, for default data/ paths."
+     "Standalone actor repository root, for default data paths."
      []
-     (clojure.java.io/file "20-actors" "meibo")))
+     (clojure.java.io/file ".")))

@@ -1,0 +1,4 @@
+{:paths ["src" "test"]
+ :tasks
+ {test {:doc "Run the standalone actor test suite"
+        :task (shell "bb run_tests.clj")}}}
