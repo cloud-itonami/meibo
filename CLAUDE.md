@@ -20,8 +20,17 @@ their own data-protection weight to republish without the institution's own
 participation. Instead: a **verified LINK registry** to the official search
 tool each institution already runs — the same pattern already proven inside
 saisei (`:proc/official-forms-url`, `legal_directory`), generalized into its
-own actor and grown to 10 jurisdictions (`data/legal-directory.edn`, 22
+own actor and grown to 10 jurisdictions (`data/legal-directory.edn`, 23
 entries).
+
+**Second registry, added 2026-07-28** (`data/verification-window.edn`, 8
+entries, Japan): the same verified-link pattern applied to a different
+question — not "where do I look up a professional" but "someone claims to be
+X; where does X itself publish its window, so I can hang up and call THAT."
+Motivated by the 2026 corporate police-impersonation fraud wave (警察庁 2025:
+27,832 recognized cases / ¥142.31B, of which ニセ警察詐欺 11,014 / ¥100.5B).
+The system-dynamics reason it is a *lookup* and not a *classifier* is in G11
+below.
 
 ## Hard gates (constitutional — read before any change)
 
@@ -32,6 +41,25 @@ entries).
   absence).
 - **G2 non-adjudicating.** meibo never says "this lawyer is good" — it points
   at the authoritative place to verify licensing/standing yourself.
+- **G11 no-inbound-attestation** (2026-07-28, `verification-window` registry).
+  meibo has **no API that takes an inbound number, caller-id, display name, or
+  a callback number the caller supplied.** Caller-id is spoofable, so an
+  "is this caller genuine?" endpoint fails in both directions: a match would
+  attest to a spoofed number, and a non-match would be read as proof of fraud.
+  `lookup` therefore returns the constant verdict `:call-the-published-window`
+  for every input, including uncovered claims and uncovered jurisdictions, and
+  its guidance says explicitly that an uncovered claim is *not* evidence the
+  caller is genuine. Tests enforce this as an absence: no schema key may match
+  `caller|inbound|allowlist|whitelist|known-good|trusted-number`, and the
+  verdict must be identical across covered/uncovered/nonsense inputs.
+
+  *Why this is the load-bearing design decision*: in the はてな 2026-04-20
+  incident the bank's own screening fired **18.5% of the way into the transfer
+  window** and delivered nothing, because its output terminated at the person
+  under attack, who could lift the hold. Improving a judgement does not help
+  when the judgement itself is what is under attack. This registry works by
+  **replacing the judgement with a lookup**, and adding an attestation endpoint
+  would put a judgement right back in.
 - **G10 jurisdiction/provenance honesty.** Every `:dir/url` was verified live
   (WebSearch/WebFetch) before being recorded — never guessed or recalled from
   memory. `coverage_report.cljc` names the ~183 uncovered jurisdictions as an
@@ -66,21 +94,24 @@ or a synced data snapshot — never a source-level dependency.
 ├── README.md
 ├── manifest.edn              # actor manifest (0 cells — link-registry only, 3 gates, 3 non-goals)
 ├── data/
-│   └── legal-directory.edn   # 22 entries × 10 jurisdictions, each :dir/url verified live
+│   ├── legal-directory.edn   # 23 entries × 10 jurisdictions, each :dir/url verified live
+│   └── verification-window.edn # 8 entries (jp), impersonation-claim → published window (G11)
 ├── methods/                  # clj/bb (.cljc) — kotoba-native, self-contained
 │   ├── edn.cljc              # minimal EDN reader (own copy — see Actor independence)
 │   ├── directory.cljc        # by-jurisdiction / jurisdictions-covered
-│   └── coverage_report.cljc  # honest jurisdiction coverage + named gaps (G10)
-├── tests/                    # clj/bb (.cljc) — bb run_tests.sh (9 tests / 139 assertions)
+│   ├── coverage_report.cljc  # honest jurisdiction coverage + named gaps (G10)
+│   └── verification_window.cljc # claim → published window; outbound-only (G11)
+├── tests/                    # clj/bb (.cljc) — bb run_tests.clj (26 tests / 428 assertions)
 │   ├── test_directory.cljc
-│   └── test_coverage.cljc
+│   ├── test_coverage.cljc
+│   └── test_verification_window.cljc
 └── run_tests.sh
 ```
 
 ## Run
 
 ```bash
-bash 20-actors/meibo/run_tests.sh   # full suite: 9 tests / 139 assertions green
+bb run_tests.clj   # full suite: 26 tests / 428 assertions green
 
 bb --classpath 20-actors -e '(require (quote [meibo.methods.coverage-report :as c])) (print (c/report (c/coverage)))'
 ```
