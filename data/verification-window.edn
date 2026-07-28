@@ -1,0 +1,158 @@
+;; meibo 名簿 — verification-window registry (ADR-2607062200 の scope 拡張, 2026-07-28).
+;;
+;; 目的: 「Xを名乗る着信/連絡があった」ときに、その名乗りを一切評価せず、
+;; **X自身が公表している窓口**へ折り返すための引き当て表。
+;;
+;; なぜこの形か: 2026年の法人向けニセ警察詐欺(はてな事案、11億7,981万円/約27時間)
+;; では、銀行の異常検知は送金ウィンドウの18.5%時点で既に発火していたのに、その出力の
+;; 終端先が「いま攻撃を受けている本人」だったため実効ゼロだった。判断の質を上げる
+;; 対策は、判断そのものが攻撃対象になっている以上効かない。効くのは判断を**引き当てに
+;; 置き換える**こと — それがこのファイルの役割。
+;;
+;; ── HARD GATES ────────────────────────────────────────────────────────────
+;;
+;; G1  機関レベルのみ。個人(担当官名・職員番号・個人直通番号)は一切持たない。
+;;     既存 legal-directory.edn と同一の不変条件。
+;;
+;; G2  非裁定。meibo は「この窓口が正しい」とは言うが「この相手は本物だ」とは
+;;     絶対に言わない。
+;;
+;; G10 出所正直。:vw/url は全件ライブ検証済み(:vw/verified-method :webfetch)。
+;;     直接fetchしていないものは :linked-from-verified-page とし、:vw/verified-via
+;;     で親エントリを名指しする — 推測や記憶で書かない。未収載は
+;;     verification_window.cljc の claim-worklist が名指しで宣言する。
+;;
+;; G11 **着信を肯定しない(no-inbound-attestation)** — 本ウェーブで追加。
+;;     このレジストリは「かかってきた番号」を入力に取る API を持たない。
+;;     発信者番号は偽装できるので、既知の正規番号と一致したことを根拠に
+;;     「本物」と返す機能は**能動的に危険**であり、実装しないだけでなく
+;;     テストでその不在を強制する(test_verification_window.cljc)。
+;;     出力は常に「公表窓口へこちらからかけ直せ」の一方向だけ。
+;;
+;; ── フィールド ────────────────────────────────────────────────────────────
+;;
+;; :vw/institution-class  :police | :financial-regulator | :bank-association
+;;                        | :consumer-affairs | :security-incident-cert
+;; :vw/covers             この窓口が検証しうる「名乗り」の種別 (:claim/*)
+;; :vw/published-number   その機関自身が :vw/url 上で公表している番号。
+;;                        ページに載っていなければ nil にし
+;;                        :vw/number-source :not-published-here とする
+;;                        (別ソースから番号を持ってきて詰めない)
+;; :vw/verified-at        検証日 / :vw/verified-method :webfetch | :linked-from-verified-page
+;;
+;; 注: :claim/court は本ファイルではなく既存 legal-directory.edn の
+;; :court-locator エントリ(10法域)が担当する。二重に持たない
+;; (verification_window.cljc の claim->directory-kind が橋渡しする)。
+
+[{:db/id -1
+  :vw/id "vw:jp-police-consult"
+  :vw/jurisdiction :jp
+  :vw/institution-class :police
+  :vw/institution "警察庁"
+  :vw/label "ご意見、各種相談・情報提供等（警察相談専用電話 #9110）"
+  :vw/url "https://www.npa.go.jp/goiken_index.html"
+  :vw/published-number "#9110"
+  :vw/number-source :on-page
+  :vw/covers [:claim/police :claim/police-investigation]
+  :vw/verified-at "2026-07-28"
+  :vw/verified-method :webfetch
+  :vw/note "全国共通の短縮ダイヤル。かけた地域を管轄する警察本部の総合相談室につながる。緊急時は110番。"}
+
+ {:db/id -2
+  :vw/id "vw:jp-police-prefectural-list"
+  :vw/jurisdiction :jp
+  :vw/institution-class :police
+  :vw/institution "警察庁"
+  :vw/label "都道府県警察 相談窓口一覧（PDF）"
+  :vw/url "https://www.npa.go.jp/bureau/soumu/soudan/soudanmadoguti.pdf"
+  :vw/published-number nil
+  :vw/number-source :not-published-here
+  :vw/covers [:claim/police :claim/police-investigation]
+  :vw/verified-at "2026-07-28"
+  :vw/verified-method :linked-from-verified-page
+  :vw/verified-via "vw:jp-police-consult"
+  :vw/note "都道府県ごとの相談窓口番号が列挙されたPDF。本ウェーブでは親ページ(vw:jp-police-consult)からのリンクとして確認しただけで、PDF本体は直接fetchしていない — G10のため :webfetch とは書かない。『〇〇県警を名乗る着信』はこの一覧の番号へ折り返す。"}
+
+ {:db/id -3
+  :vw/id "vw:jp-police-sos47"
+  :vw/jurisdiction :jp
+  :vw/institution-class :police
+  :vw/institution "警察庁"
+  :vw/label "SOS47 特殊詐欺対策ページ"
+  :vw/url "https://www.npa.go.jp/bureau/safetylife/sos47/"
+  :vw/published-number "#9110"
+  :vw/number-source :on-page
+  :vw/covers [:claim/police :claim/fraud-investigation]
+  :vw/verified-at "2026-07-28"
+  :vw/verified-method :webfetch
+  :vw/note "ページ上に #9110 / 消費者ホットライン 188 / 匿名通報ダイヤル 0120-924-839 / 未公開株通報専用窓口 0120-344-999 が併記されている。ニセ警察詐欺の手口説明もここが一次案内。"}
+
+ {:db/id -4
+  :vw/id "vw:jp-fsa-consumer-desk"
+  :vw/jurisdiction :jp
+  :vw/institution-class :financial-regulator
+  :vw/institution "金融庁"
+  :vw/label "金融サービス利用者相談室"
+  :vw/url "https://www.fsa.go.jp/receipt/soudansitu/index.html"
+  :vw/published-number "0570-016811"
+  :vw/number-source :on-page
+  :vw/covers [:claim/financial-regulator]
+  :vw/verified-at "2026-07-28"
+  :vw/verified-method :webfetch
+  :vw/note "IP電話からは 03-5251-6811。受付は平日10:00-17:00。『金融庁の者だ』という名乗りはここへ折り返して確認する。"}
+
+ {:db/id -5
+  :vw/id "vw:jp-zenginkyo-soudanshitsu"
+  :vw/jurisdiction :jp
+  :vw/institution-class :bank-association
+  :vw/institution "一般社団法人 全国銀行協会"
+  :vw/label "全国銀行協会相談室"
+  :vw/url "https://www.zenginkyo.or.jp/adr/about/"
+  :vw/published-number nil
+  :vw/number-source :not-published-here
+  :vw/covers [:claim/bank :claim/bank-association]
+  :vw/verified-at "2026-07-28"
+  :vw/verified-method :webfetch
+  :vw/note "ページの存在は直接fetchで確認したが、電話番号は当該ページ上に記載が無かったため nil のまま。別ソースの番号をここに詰めない(G10)。番号一覧は vw:jp-zenginkyo-clinic-list を参照。"}
+
+ {:db/id -6
+  :vw/id "vw:jp-zenginkyo-clinic-list"
+  :vw/jurisdiction :jp
+  :vw/institution-class :bank-association
+  :vw/institution "一般社団法人 全国銀行協会"
+  :vw/label "「銀行とりひき相談所」電話番号・所在地一覧"
+  :vw/url "https://www.zenginkyo.or.jp/abstract/clinic/addresses/"
+  :vw/published-number nil
+  :vw/number-source :not-published-here
+  :vw/covers [:claim/bank :claim/bank-association]
+  :vw/verified-at "2026-07-28"
+  :vw/verified-method :webfetch
+  :vw/note "各地の銀行とりひき相談所46か所の番号・所在地一覧(北海道東北7/関東甲信越9/北陸東海7/近畿6/中国四国7/九州沖縄13)。受付は原則 月-金 9:00-17:00。個別の相談所番号はここでは複製せず、機関自身の一覧ページを指す(G1/G10)。"}
+
+ {:db/id -7
+  :vw/id "vw:jp-kokusen-center-map"
+  :vw/jurisdiction :jp
+  :vw/institution-class :consumer-affairs
+  :vw/institution "独立行政法人 国民生活センター"
+  :vw/label "全国の消費生活センター等（消費者ホットライン 188）"
+  :vw/url "https://www.kokusen.go.jp/map/"
+  :vw/published-number "188"
+  :vw/number-source :on-page
+  :vw/covers [:claim/consumer-affairs]
+  :vw/verified-at "2026-07-28"
+  :vw/verified-method :webfetch
+  :vw/note "全国統一ホットライン。地域別に最寄りの消費生活センターへ接続される検索窓口を兼ねる。"}
+
+ {:db/id -8
+  :vw/id "vw:jp-ipa-anshin"
+  :vw/jurisdiction :jp
+  :vw/institution-class :security-incident-cert
+  :vw/institution "独立行政法人 情報処理推進機構 (IPA)"
+  :vw/label "情報セキュリティ安心相談窓口"
+  :vw/url "https://www.ipa.go.jp/security/anshin/index.html"
+  :vw/published-number nil
+  :vw/number-source :not-published-here
+  :vw/covers [:claim/security-incident]
+  :vw/verified-at "2026-07-28"
+  :vw/verified-method :webfetch
+  :vw/note "ページの存在は直接fetchで確認。電話番号・受付時間は当該ページ本体には記載が無く別ページ扱いだったため nil のまま(G10)。遠隔操作アプリを入れさせられた等の相談先。"}]

@@ -7,7 +7,8 @@
 (require '[clojure.test :as t])
 
 (def suites '[meibo.tests.test-directory
-              meibo.tests.test-coverage])
+              meibo.tests.test-coverage
+              meibo.tests.test-verification-window])
 
 (apply require suites)
 
