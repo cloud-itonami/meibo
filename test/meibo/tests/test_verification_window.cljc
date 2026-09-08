@@ -2,7 +2,7 @@
   "meibo 名簿 — verification-window registry tests (ADR-2607062200 scope 拡張).
   clojure.test. G1/G2/G10 は既存 directory と共通、G11 は本ウェーブ固有。"
   (:require [clojure.test :refer [deftest is run-tests]]
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             [meibo.methods.verification-window :as vw]))
 
 (def windows (vw/load-windows))
@@ -63,7 +63,7 @@
   (let [banned #"caller|inbound|allowlist|whitelist|known-good|trusted-number"]
     (doseq [w windows
             k (keys w)]
-      (is (nil? (re-find banned (str/lower-case (str k))))
+      (is (nil? (re-find banned (str/lower (str k))))
           (str (get w ":vw/id") " holds an attacker-controlled-looking key: " k)))))
 
 (deftest test-g11-verdict-is-constant-and-never-affirms-the-caller
