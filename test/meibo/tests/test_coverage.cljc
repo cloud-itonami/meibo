@@ -1,7 +1,7 @@
 (ns meibo.tests.test-coverage
   "meibo 名簿 — coverage-report tests (G10, ADR-2607062200). clojure.test."
   (:require [clojure.test :refer [deftest is run-tests]]
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             [meibo.methods.coverage-report :as c]))
 
 (deftest test-coverage-counts-10-jurisdictions

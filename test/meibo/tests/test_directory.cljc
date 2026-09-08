@@ -1,7 +1,7 @@
 (ns meibo.tests.test-directory
   "meibo 名簿 — directory-registry tests (ADR-2607062200). clojure.test."
   (:require [clojure.test :refer [deftest is run-tests]]
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             [meibo.methods.directory :as dir]))
 
 (deftest test-10-jurisdictions-covered

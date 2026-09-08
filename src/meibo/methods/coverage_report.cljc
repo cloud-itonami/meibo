@@ -1,6 +1,6 @@
 (ns meibo.methods.coverage-report
   "meibo 名簿 — honest jurisdiction-coverage report (G10, ADR-2607062200)."
-  (:require [clojure.string :as str]
+  (:require [kotoba.lang.text :as str]
             [meibo.methods.directory :as dir]))
 
 (def un-member-states 193)
