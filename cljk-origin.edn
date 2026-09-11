@@ -1,0 +1,15 @@
+{:format :kotoba.cljk-origin/v1
+ :renamed-on "2026-09-11"
+ :decision "adr-2609111500-cljk-rename-all-clojure-source (com-junkawasaki/root 90-docs/adr; owner instruction 2026-09-11)"
+ :rule "value = the extension the file had before the rename. A path ending in .clj.cljk or .cljs.cljk kept it in the name because both platform files existed (or the plain target was taken)."
+ :origins
+ {"run_tests.cljk" ".clj"
+  "src/meibo/cells/social_post/state_machine.cljk" ".cljc"
+  "src/meibo/methods/coverage_report.cljk" ".cljc"
+  "src/meibo/methods/directory.cljk" ".cljc"
+  "src/meibo/methods/edn.cljk" ".cljc"
+  "src/meibo/methods/social.cljk" ".cljc"
+  "src/meibo/methods/verification_window.cljk" ".cljc"
+  "test/meibo/tests/test_coverage.cljk" ".cljc"
+  "test/meibo/tests/test_directory.cljk" ".cljc"
+  "test/meibo/tests/test_verification_window.cljk" ".cljc"}}
