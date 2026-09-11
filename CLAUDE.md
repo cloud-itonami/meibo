@@ -101,7 +101,7 @@ or a synced data snapshot — never a source-level dependency.
 │   ├── directory.cljc        # by-jurisdiction / jurisdictions-covered
 │   ├── coverage_report.cljc  # honest jurisdiction coverage + named gaps (G10)
 │   └── verification_window.cljc # claim → published window; outbound-only (G11)
-├── tests/                    # clj/bb (.cljc) — bb run_tests.cljk (26 tests / 428 assertions)
+├── tests/                    # clj/bb (.cljc) — kbb run_tests.cljk (26 tests / 428 assertions)
 │   ├── test_directory.cljc
 │   ├── test_coverage.cljc
 │   └── test_verification_window.cljc
@@ -111,9 +111,9 @@ or a synced data snapshot — never a source-level dependency.
 ## Run
 
 ```bash
-bb run_tests.cljk   # full suite: 26 tests / 428 assertions green
+kbb run_tests.cljk   # full suite: 26 tests / 428 assertions green
 
-bb --classpath 20-actors -e '(require (quote [meibo.methods.coverage-report :as c])) (print (c/report (c/coverage)))'
+kbb --classpath 20-actors -e '(require (quote [meibo.methods.coverage-report :as c])) (print (c/report (c/coverage)))'
 ```
 
 ## Do not
