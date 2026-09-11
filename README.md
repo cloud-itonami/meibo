@@ -49,7 +49,7 @@ system-dynamics 側の計算は kotoba-lang/loop-system-dynamics の
 API を持たない。詳細は CLAUDE.md)**。
 
 ```bash
-bb test
+kbb -M:test
 ```
 
 License: Apache 2.0 + etzhayyim Charter Compliance Rider (see repo root).

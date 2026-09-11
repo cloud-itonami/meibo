@@ -5,5 +5,5 @@
   :repository/west-path "orgs/etzhayyim/com-etzhayyim-meibo"
   :repository/legacy-path "20-actors/meibo"
   :repository/runtime :babashka
-  :repository/test-command "bb test"
+  :repository/test-command "kbb -M:test"
   :repository/external-dependencies []}]
