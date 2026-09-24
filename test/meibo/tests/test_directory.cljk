@@ -1,6 +1,6 @@
 (ns meibo.tests.test-directory
   "meibo 名簿 — directory-registry tests (ADR-2607062200). clojure.test."
-  (:require [clojure.test :refer [deftest is run-tests]]
+  (:require [kotoba.test :refer [deftest is run-tests]]
             [kotoba.lang.text :as str]
             [meibo.methods.directory :as dir]))
 

@@ -4,7 +4,7 @@
 ;; tooling is clj/bb, NOT shell. New actors ship run_tests.cljk, not run_tests.sh.
 ;;
 ;;   bb test
-(require '[clojure.test :as t])
+(require '[kotoba.test :as t])
 
 (def suites '[meibo.tests.test-directory
               meibo.tests.test-coverage
