@@ -90,7 +90,7 @@ or a synced data snapshot — never a source-level dependency.
 
 ```
 20-actors/meibo/
-├── CLAUDE.md                # this file
+├── AGENTS.md                # this file
 ├── README.md
 ├── manifest.edn              # actor manifest (0 cells — link-registry only, 3 gates, 3 non-goals)
 ├── data/
