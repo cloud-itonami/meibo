@@ -10,7 +10,7 @@
 すべて実際にWeb検索・fetchで存在確認済み。個人の弁護士・裁判官・担当官の記録は
 一切保持しない(機関レベルのリンクのみ、G1)。
 
-- 📚 設計と不変条件: [`CLAUDE.md`](CLAUDE.md) · ADR-2607062200
+- 📚 設計と不変条件: [`AGENTS.md`](AGENTS.md) · ADR-2607062200
 - 🔗 これは gftdcojp ADR-0016 が計画しながら一度も実装されなかった
   judge/bengoshi/adr/legal-aid actor群の、誠実な代替実装です。詳細は ADR 参照。
 - 🔗 姉妹actor: [`../saisei/`](../saisei/) (この`legal_directory`パターンの発祥元),
@@ -46,7 +46,7 @@ system-dynamics 側の計算は kotoba-lang/loop-system-dynamics の
 **Hard lines**: 機関レベルのみ(個人の弁護士・裁判官・担当官記録は保持しない、G1) ·
 非裁定(「この人は良い弁護士」とは判断しない、G2) · 管轄正直(未収載法域・未収載の
 名乗りは推測せず宣言する、G10) · **着信を肯定しない(G11 — 発信者番号を入力に取る
-API を持たない。詳細は CLAUDE.md)**。
+API を持たない。詳細は AGENTS.md)**。
 
 ```bash
 kbb -M:test

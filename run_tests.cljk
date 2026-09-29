@@ -1,6 +1,6 @@
 #!/usr/bin/env kbb
 ;; meibo — bb-native test runner (Clojure / babashka; no shell). ADR-2607062200 + ADR-2606072802.
-;; Per the repo-wide rule (root CLAUDE.md §"Operational code = clj/bb"): first-party
+;; Per the repo-wide rule (root AGENTS.md §"Operational code = clj/bb"): first-party
 ;; tooling is clj/bb, NOT shell. New actors ship run_tests.cljk, not run_tests.sh.
 ;;
 ;;   bb test

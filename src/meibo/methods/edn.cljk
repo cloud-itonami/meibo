@@ -1,7 +1,7 @@
 (ns meibo.methods.edn
   "meibo 名簿 — minimal EDN reader (subset: [] {} :kw \"str\" num bool nil).
 
-  Fidelity invariant (root CLAUDE.md convention, shared with tate/methods/edn.cljc):
+  Fidelity invariant (root AGENTS.md convention, shared with tate/methods/edn.cljc):
   keywords are kept as their \":ns/name\" STRINGS, not Clojure keywords, so every
   record is keyed on string keys (\":proc/id\", \":sit/jurisdiction\", …) — the same
   convention the rest of the kotoba-native actor registries use.
